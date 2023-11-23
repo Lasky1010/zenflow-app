@@ -1,11 +1,12 @@
 package edu.tms.zenflow.data.dto;
 
 import edu.tms.zenflow.data.entity.Post;
-import edu.tms.zenflow.data.enums.UserRole;
+import edu.tms.zenflow.data.enums.Authorities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -26,5 +27,7 @@ public class UserDto {
 
     private List<Post> posts;
 
-    private UserRole role;
+    private Authorities role;
+
+    private OffsetDateTime createdAt;
 }

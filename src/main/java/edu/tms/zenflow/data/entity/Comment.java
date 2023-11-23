@@ -27,9 +27,9 @@ public class Comment {
     @Column(columnDefinition = "text", nullable = false)
     private String message;
 
+
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private OffsetDateTime createdAt;
-
 }
