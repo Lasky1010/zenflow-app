@@ -1,4 +1,4 @@
-package edu.tms.zenflow.mapper;
+package edu.tms.zenflow.data.mapper;
 
 import edu.tms.zenflow.data.dto.PostDto;
 import edu.tms.zenflow.data.entity.Post;

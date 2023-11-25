@@ -5,6 +5,7 @@ import edu.tms.zenflow.data.enums.Authorities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +28,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false, unique = true, updatable = false)
@@ -41,12 +40,13 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Post> posts;
 
+    @Getter
     @ElementCollection(targetClass = Authorities.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles",
             joinColumns = {@JoinColumn(name = "user_id")}
     )
-    private Set<Authorities> userAuthorities = new HashSet<>();
+    private Set<Authorities> permissions;
 
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(name = "created_at", updatable = false)
@@ -92,5 +92,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setPermissions(Set<Authorities> permissions) {
+        this.permissions = permissions;
     }
 }
