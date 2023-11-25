@@ -5,6 +5,7 @@ import edu.tms.zenflow.data.dto.user.UserSignInDto;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.LogInException;
 import edu.tms.zenflow.data.exception.PasswordConfirmException;
+import edu.tms.zenflow.data.exception.UsernameAlreadyTakenException;
 import edu.tms.zenflow.data.mapper.UserMapper;
 import edu.tms.zenflow.repository.UserRepository;
 import edu.tms.zenflow.security.JwtTokenProvider;
@@ -54,6 +55,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional
     public UserSignInDto signIn(UserSignInDto user) {
+        User fromBD = userRepository.findByUsername(user.getUsername()).orElse(null);
+
+        if (fromBD != null) {
+            throw new UsernameAlreadyTakenException("Username has already taken");
+        }
 
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             throw new PasswordConfirmException("Passwords are not equal");
