@@ -19,7 +19,6 @@ import java.util.List;
 @Component
 public class JwtTokenVerification {
 
-    // private Key jwtSecretCode=Jwts.SIG.HS512.key().build();
     private final Key jwtSecretKey = JwtSecretToken.getSecretKey();
 
     public boolean isValidToken(String token) {
@@ -32,13 +31,6 @@ public class JwtTokenVerification {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    private String rawToken(String token) {
-        if (token != null && token.startsWith(SecurityConstants.PREFIX)) {
-            return token.substring(SecurityConstants.PREFIX.length() + 1);
-        }
-        return null;
     }
 
     public Authentication fromToken(String token) {
@@ -57,5 +49,12 @@ public class JwtTokenVerification {
         return new UsernamePasswordAuthenticationToken(username, null, permsList);
 
 
+    }
+
+    private String rawToken(String token) {
+        if (token != null && token.startsWith(SecurityConstants.PREFIX)) {
+            return token.substring(SecurityConstants.PREFIX.length() + 1);
+        }
+        return null;
     }
 }

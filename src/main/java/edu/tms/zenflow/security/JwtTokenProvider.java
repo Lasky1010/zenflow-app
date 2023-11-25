@@ -34,7 +34,7 @@ public class JwtTokenProvider {
                 .claim("username", user.getUsername())
                 .claim("name", user.getName())
                 .claim("email", user.getEmail())
-                .claim("perms", user.getUserAuthorities())
+                .claim("perms", user.getPermissions())
                 .claim(IS_REFRESHED_TOKEN, false)
                 .notBefore(now)
                 .issuedAt(now)
