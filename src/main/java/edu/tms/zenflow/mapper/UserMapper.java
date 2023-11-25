@@ -11,9 +11,9 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(componentModel = SPRING)
 public interface UserMapper {
 
-    @Mapping(ignore = true, target = "password")
-
+    @Mapping(target = "password", ignore = true)
     UserDto mapTo(User user);
 
+    @Mapping(target = "id", ignore = true)
     User mapTo(UserDto userDto);
 }

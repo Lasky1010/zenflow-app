@@ -44,7 +44,8 @@ public class User implements UserDetails {
     @ElementCollection(targetClass = Authorities.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles",
-            joinColumns = {@JoinColumn(name = "user_id")})
+            joinColumns = {@JoinColumn(name = "user_id")}
+    )
     private Set<Authorities> userAuthorities = new HashSet<>();
 
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
