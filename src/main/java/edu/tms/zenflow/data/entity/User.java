@@ -52,15 +52,15 @@ public class User implements UserDetails {
     @CreationTimestamp
     private OffsetDateTime createdAt;
 
+    @Transient
+    private Collection<? extends GrantedAuthority> authorities;
+
     public User(Long id, String username, String email, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.authorities = authorities;
     }
-
-    @Transient
-    private Collection<? extends GrantedAuthority> authorities;
 
     @Override
     public String getPassword() {
