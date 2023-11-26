@@ -1,7 +1,7 @@
 package edu.tms.zenflow.service.impl;
 
+import edu.tms.zenflow.data.dto.request.UserSignInDto;
 import edu.tms.zenflow.data.dto.user.UserDto;
-import edu.tms.zenflow.data.dto.user.UserSignInDto;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.LogInException;
 import edu.tms.zenflow.data.exception.PasswordConfirmException;
@@ -58,6 +58,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User fromBD = userRepository.findByUsername(user.getUsername()).orElse(null);
 
         if (fromBD != null) {
+            throw new UsernameAlreadyTakenException("Username has already taken");
+        }
+
+        User fromBd = userRepository.findByUsername(user.getUsername()).orElse(null);
+
+        if (fromBd != null) {
             throw new UsernameAlreadyTakenException("Username has already taken");
         }
 

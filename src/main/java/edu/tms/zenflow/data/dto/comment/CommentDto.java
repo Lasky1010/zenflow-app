@@ -1,4 +1,4 @@
-package edu.tms.zenflow.data.dto;
+package edu.tms.zenflow.data.dto.comment;
 
 import edu.tms.zenflow.data.entity.Post;
 import lombok.AllArgsConstructor;

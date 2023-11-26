@@ -1,4 +1,4 @@
-package edu.tms.zenflow.data.dto.user;
+package edu.tms.zenflow.data.dto.request;
 
 import edu.tms.zenflow.annotation.ValidPass;
 import edu.tms.zenflow.annotation.ValidUsername;
