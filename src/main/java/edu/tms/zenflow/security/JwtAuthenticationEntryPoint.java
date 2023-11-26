@@ -1,6 +1,5 @@
 package edu.tms.zenflow.security;
 
-import edu.tms.zenflow.data.dto.response.InvalidLoginResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +13,7 @@ import java.io.IOException;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        InvalidLoginResponse loginResponse = new InvalidLoginResponse();
+        // InvalidLoginResponse loginResponse = new InvalidLoginResponse();
         //TODO maybe GSON etc.
     }
 }

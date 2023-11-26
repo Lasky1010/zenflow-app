@@ -18,4 +18,8 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return value.matches(EMAIL_PATTERN);
     }
+
+    public boolean isValid(String value) {
+        return value.matches(EMAIL_PATTERN);
+    }
 }

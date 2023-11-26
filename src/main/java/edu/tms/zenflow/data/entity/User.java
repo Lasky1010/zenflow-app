@@ -32,8 +32,10 @@ public class User implements UserDetails {
 
     @Column(nullable = false, unique = true, updatable = false)
     private String username;
+
     @Column(unique = true)
     private String email;
+
     @Column(length = 1000)
     private String password;
 
@@ -47,6 +49,9 @@ public class User implements UserDetails {
             joinColumns = {@JoinColumn(name = "user_id")}
     )
     private Set<Authorities> permissions;
+
+    @Column(columnDefinition = "text")
+    private String bio;
 
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(name = "created_at", updatable = false)

@@ -1,10 +1,16 @@
 package edu.tms.zenflow.service;
 
 import edu.tms.zenflow.data.dto.request.UserSignInDto;
-import edu.tms.zenflow.data.dto.user.UserDto;
+import edu.tms.zenflow.data.dto.request.UserUpdateDto;
+import edu.tms.zenflow.data.entity.User;
+
+import java.security.Principal;
 
 public interface UserService {
-    String auth(UserDto userDto);
 
-    UserSignInDto signIn(UserSignInDto user);
+    UserSignInDto signUp(UserSignInDto user);
+
+    User getCurrentUser(Principal principal);
+
+    UserUpdateDto update(UserUpdateDto userUpdate, Principal principal);
 }
