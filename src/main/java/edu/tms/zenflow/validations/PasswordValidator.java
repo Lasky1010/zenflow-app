@@ -17,4 +17,8 @@ public class PasswordValidator implements ConstraintValidator<ValidPass, String>
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return value.matches(PASSWORD_PATTERN);
     }
+
+    public boolean isValid(String value) {
+        return value.matches(PASSWORD_PATTERN);
+    }
 }

@@ -23,6 +23,8 @@ public class UserDto {
 
     private String email;
 
+    private String bio;
+
     private String password;
 
     private List<Post> posts;

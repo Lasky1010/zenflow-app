@@ -52,6 +52,7 @@ public class JwtTokenVerification {
     }
 
     private String rawToken(String token) {
+
         if (token != null && token.startsWith(SecurityConstants.PREFIX)) {
             return token.substring(SecurityConstants.PREFIX.length() + 1);
         }

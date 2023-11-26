@@ -3,8 +3,6 @@ package edu.tms.zenflow.security;
 import edu.tms.zenflow.data.constants.SecurityConstants;
 import edu.tms.zenflow.data.entity.User;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.TextCodec;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +15,10 @@ public class JwtTokenProvider {
 
     private final String IS_REFRESHED_TOKEN = "isRefreshToken";
 
-    private final Key secretKey = JwtSecretToken.getSecretKey();//Jwts.SIG.HS512.key().build();
+    private final Key secretKey = JwtSecretToken.getSecretKey();
 
     public String generateToken(User user) {
         log.debug("Generate jwt token for user with id={}", user.getId());
-
 
         var now = new Date(System.currentTimeMillis());
         var nowTime = now.getTime();
@@ -52,7 +49,7 @@ public class JwtTokenProvider {
                 .issuedAt(nowDate)
                 .notBefore(nowDate)
                 .expiration(expDate)
-                .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SecurityConstants.SECRET))
+                .signWith(secretKey)
                 .subject(subject)
                 .claim(IS_REFRESHED_TOKEN, true)
                 .compact();
