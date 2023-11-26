@@ -1,7 +1,7 @@
 package edu.tms.zenflow.data.mapper;
 
+import edu.tms.zenflow.data.dto.request.UserSignInDto;
 import edu.tms.zenflow.data.dto.user.UserDto;
-import edu.tms.zenflow.data.dto.user.UserSignInDto;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.enums.Authorities;
 import org.mapstruct.Mapper;

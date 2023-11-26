@@ -1,4 +1,4 @@
-package edu.tms.zenflow.data.dto;
+package edu.tms.zenflow.data.dto.post;
 
 import edu.tms.zenflow.data.entity.Comment;
 import edu.tms.zenflow.data.entity.User;
