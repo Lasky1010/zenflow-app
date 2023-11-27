@@ -1,8 +1,11 @@
 package edu.tms.zenflow.service.impl;
 
+import edu.tms.zenflow.data.constants.BadRequestConstants;
 import edu.tms.zenflow.data.dto.request.UserSignInDto;
 import edu.tms.zenflow.data.dto.request.UserUpdateDto;
 import edu.tms.zenflow.data.entity.User;
+import edu.tms.zenflow.data.exception.BadRequestException;
+import edu.tms.zenflow.data.exception.EmailHasAlreadyTakenException;
 import edu.tms.zenflow.data.exception.PasswordConfirmException;
 import edu.tms.zenflow.data.exception.UsernameAlreadyTakenException;
 import edu.tms.zenflow.data.mapper.UserMapper;
@@ -44,23 +47,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional
     public UserSignInDto signUp(UserSignInDto user) {
-        User fromBD = userRepository.findByUsername(user.getUsername()).orElse(null);
-        if (fromBD != null) {
-            throw new UsernameAlreadyTakenException("Username has already taken");
-        }
 
         User fromBd = userRepository.findByUsername(user.getUsername()).orElse(null);
-
         if (fromBd != null) {
-            throw new UsernameAlreadyTakenException("Username has already taken");
+            throw new UsernameAlreadyTakenException(BadRequestConstants.USERNAME_ALREADY_TAKEN);
         }
-
+        fromBd = userRepository.findByEmail(user.getEmail()).orElse(null);
+        if (fromBd != null) {
+            throw new EmailHasAlreadyTakenException(BadRequestConstants.EMAIL_ALREADY_TAKEN);
+        }
         if (!user.getPassword().equals(user.getConfirmPassword())) {
-            throw new PasswordConfirmException("Passwords are not equal");
+            throw new PasswordConfirmException(BadRequestConstants.PASSWORD_NOT_EQUAL);
         }
         try {
             log.info("Trying save user: " + user.getUsername());
             User save = userRepository.save(userMapper.mapTo(user));
+            log.info("Successfully saved user: " + user.getUsername());
             return userMapper.mapToSignIn(save);
         } catch (Exception e) {
             log.error("Error during saving to database user: " + user.getUsername() +
@@ -78,9 +80,29 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     public UserUpdateDto update(UserUpdateDto userUpdate, Principal principal) {
         User user = getCurrentUser(principal);
-        User updated = userMapper.mapToUpdatedUser(userUpdate, user);
-        return userMapper.mapToUpdatedDto(userRepository.save(updated));
 
+        User updated;
+        try {
+            User user1 = userMapper.mapToUpdatedUser(userUpdate, user);
+            log.info("try to update user");
+
+            if (userUpdate.getUsername() != null
+                    && userRepository.findByUsername(user1.getUsername()).orElse(null) != null) {
+                throw new UsernameAlreadyTakenException(BadRequestConstants.USERNAME_ALREADY_TAKEN);
+            }
+            if (userUpdate.getEmail() != null
+                    && userRepository.findByEmail(user1.getEmail()).orElse(null) != null) {
+                throw new EmailHasAlreadyTakenException(BadRequestConstants.EMAIL_ALREADY_TAKEN);
+            }
+
+            updated = userRepository.save(user1);
+        } catch (Exception exception) {
+            log.error("Something went wrong\n"
+                    + exception.getMessage());
+            throw new BadRequestException("Username or Email has already taken");
+        }
+
+        return userMapper.mapToUpdatedDto(updated);
     }
 
     public User findByPrincipal(Principal principal) {
