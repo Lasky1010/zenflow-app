@@ -5,6 +5,8 @@ import edu.tms.zenflow.data.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
@@ -15,4 +17,6 @@ public interface PostMapper {
 
     @Mapping(target = "id", ignore = true)
     Post mapTo(PostDto post);
+
+    List<PostDto> mapTo(List<Post> posts);
 }
