@@ -1,12 +1,10 @@
 package edu.tms.zenflow.data.dto.post;
 
 import edu.tms.zenflow.data.entity.Comment;
-import edu.tms.zenflow.data.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -25,9 +23,8 @@ public class PostDto {
 
     private Set<String> whoLikes;
 
-    private User user;
+    private String username;
 
     private List<Comment> comments;
 
-    private OffsetDateTime createdAt;
 }

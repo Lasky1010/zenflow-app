@@ -33,6 +33,11 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
+
     @OneToMany(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER,mappedBy = "post",orphanRemoval=true)
     private List<Comment> comments;
 
