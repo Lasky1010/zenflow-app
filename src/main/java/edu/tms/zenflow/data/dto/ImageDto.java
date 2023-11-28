@@ -7,5 +7,14 @@ import lombok.Data;
 @AllArgsConstructor
 public class ImageDto {
 
+    private Long id;
+
+    private String name;
+
+    private byte[] imageData;
+
+    private Long userId;
+
+    private Long postId;
 
 }
