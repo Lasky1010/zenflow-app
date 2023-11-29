@@ -18,8 +18,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.List;
 
-import static edu.tms.zenflow.data.constants.BadRequestConstants.COMMENT_NOT_FOUND;
-import static edu.tms.zenflow.data.constants.BadRequestConstants.POST_NOT_FOUND;
+import static edu.tms.zenflow.data.constants.BadRequestConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
 
     public User findByPrincipal(Principal principal) {
         return userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found exception"));
+                .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND));
     }
 
 }

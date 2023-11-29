@@ -5,8 +5,10 @@ import edu.tms.zenflow.data.dto.request.UserUpdateDto;
 import edu.tms.zenflow.data.dto.user.UserDto;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.enums.Authorities;
+import edu.tms.zenflow.data.exception.BadRequestUpdateException;
 import edu.tms.zenflow.validations.EmailValidator;
 import edu.tms.zenflow.validations.PasswordValidator;
+import edu.tms.zenflow.validations.UsernameValidator;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -41,7 +43,12 @@ public interface UserMapper {
 
     default User mapToUpdatedUser(UserUpdateDto dto, User user) {
         if (dto.getUsername() != null && !dto.getUsername().isEmpty()) {
-            user.setUsername(dto.getUsername());
+            UsernameValidator usernameValidator = new UsernameValidator();
+            if (usernameValidator.isValid(dto.getUsername())) {
+                user.setUsername(dto.getUsername());
+            } else {
+                throw new BadRequestUpdateException("Invalid Username");
+            }
         }
         if (dto.getBio() != null && !dto.getBio().isEmpty()) {
             user.setBio(dto.getBio());
@@ -50,6 +57,8 @@ public interface UserMapper {
             EmailValidator emailValidator = new EmailValidator();
             if (emailValidator.isValid(dto.getEmail())) {
                 user.setEmail(dto.getEmail());
+            } else {
+                throw new BadRequestUpdateException("Invalid Email");
             }
 
         }
@@ -61,6 +70,8 @@ public interface UserMapper {
             if (passValidator.isValid(dto.getPassword())) {
                 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
                 user.setPassword(encoder.encode(dto.getPassword()));
+            } else {
+                throw new BadRequestUpdateException("Invalid Password");
             }
         }
         return user;

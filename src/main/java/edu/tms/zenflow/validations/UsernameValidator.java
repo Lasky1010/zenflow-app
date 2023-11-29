@@ -17,4 +17,8 @@ public class UsernameValidator implements ConstraintValidator<ValidUsername, Str
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return value.matches(USERNAME_PATTERN);
     }
+
+    public boolean isValid(String value) {
+        return value.matches(USERNAME_PATTERN);
+    }
 }

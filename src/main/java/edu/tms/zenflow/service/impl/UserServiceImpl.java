@@ -3,13 +3,12 @@ package edu.tms.zenflow.service.impl;
 import edu.tms.zenflow.data.constants.BadRequestConstants;
 import edu.tms.zenflow.data.dto.request.UserSignInDto;
 import edu.tms.zenflow.data.dto.request.UserUpdateDto;
+import edu.tms.zenflow.data.dto.user.UserDto;
 import edu.tms.zenflow.data.entity.User;
-import edu.tms.zenflow.data.exception.BadRequestException;
-import edu.tms.zenflow.data.exception.EmailHasAlreadyTakenException;
-import edu.tms.zenflow.data.exception.PasswordConfirmException;
-import edu.tms.zenflow.data.exception.UsernameAlreadyTakenException;
+import edu.tms.zenflow.data.exception.*;
 import edu.tms.zenflow.data.mapper.UserMapper;
 import edu.tms.zenflow.repository.UserRepository;
+import edu.tms.zenflow.security.AuthenticationService;
 import edu.tms.zenflow.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.List;
 
+import static edu.tms.zenflow.data.constants.BadRequestConstants.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ import java.util.List;
 public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,42 +74,48 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public User getCurrentUser(Principal principal) {
-        return findByPrincipal(principal);
+    public UserDto getCurrentUser(Principal principal) {
+        return userMapper.mapTo(findByPrincipal(principal));
     }
 
     @Override
     @Transactional
     public UserUpdateDto update(UserUpdateDto userUpdate, Principal principal) {
-        User user = getCurrentUser(principal);
-
+        User user = findByPrincipal(principal);
+        List<String> allUsernames = userRepository.findAll().stream().map(User::getUsername).toList();
+        List<String> allEmails = userRepository.findAll().stream().map(User::getEmail).toList();
         User updated;
         try {
             User user1 = userMapper.mapToUpdatedUser(userUpdate, user);
             log.info("try to update user");
-
             if (userUpdate.getUsername() != null
-                    && userRepository.findByUsername(user1.getUsername()).orElse(null) != null) {
+                    && allUsernames.contains(userUpdate.getUsername())) {
                 throw new UsernameAlreadyTakenException(BadRequestConstants.USERNAME_ALREADY_TAKEN);
             }
             if (userUpdate.getEmail() != null
-                    && userRepository.findByEmail(user1.getEmail()).orElse(null) != null) {
+                    && allEmails.contains(userUpdate.getEmail())) {
                 throw new EmailHasAlreadyTakenException(BadRequestConstants.EMAIL_ALREADY_TAKEN);
             }
-
             updated = userRepository.save(user1);
         } catch (Exception exception) {
             log.error("Something went wrong\n"
                     + exception.getMessage());
-            throw new BadRequestException("Username or Email has already taken");
+            throw new BadRequestException(USERNAME_OR_EMAIL_ALREADY_TAKEN);
         }
 
+        // TODO logout
         return userMapper.mapToUpdatedDto(updated);
+    }
+
+    @Override
+    public UserDto getUserById(Long id) {
+        return userMapper.mapTo(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND)));
     }
 
     public User findByPrincipal(Principal principal) {
         return userRepository.findByUsername(principal.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found exception"));
+                .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND));
     }
 
 }

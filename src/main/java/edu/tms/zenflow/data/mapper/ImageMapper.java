@@ -4,7 +4,9 @@ import edu.tms.zenflow.data.dto.ImageDto;
 import edu.tms.zenflow.data.entity.Image;
 import org.mapstruct.Mapper;
 
-@Mapper
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
+@Mapper(componentModel = SPRING)
 public interface ImageMapper {
 
 
