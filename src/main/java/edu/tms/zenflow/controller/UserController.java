@@ -1,7 +1,9 @@
 package edu.tms.zenflow.controller;
 
+import edu.tms.zenflow.data.dto.ImageDto;
 import edu.tms.zenflow.data.dto.request.UserUpdateDto;
 import edu.tms.zenflow.data.dto.user.UserDto;
+import edu.tms.zenflow.service.ImageService;
 import edu.tms.zenflow.service.UserService;
 import edu.tms.zenflow.validations.ResponseErrorValidation;
 import jakarta.validation.Valid;
@@ -20,17 +22,32 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
+    private final ImageService imageService;
     private final ResponseErrorValidation responseErrorValidation;
 
     @GetMapping
     public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
         UserDto currentUser = userService.getCurrentUser(principal);
-        return ResponseEntity.ok(currentUser);
+
+        UserDto userDto = new UserDto(currentUser);
+        ImageDto imageToUser = imageService.getImageToUser(principal);
+        byte[] currentUserImage = null;
+        if (imageToUser != null) {
+            currentUserImage = imageToUser.getImageData();
+        }
+        userDto.setImageData(currentUserImage);
+
+        return ResponseEntity.ok(userDto);
     }
 
+    @GetMapping("/{username}")
+    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
+        UserDto user = userService.getUserByUsername(username);
+        return ResponseEntity.ok(user);
+    }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUserById(Long userId) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
         UserDto user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
     }

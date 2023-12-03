@@ -1,6 +1,7 @@
 package edu.tms.zenflow.service;
 
 import edu.tms.zenflow.data.dto.ImageDto;
+import edu.tms.zenflow.data.entity.Image;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,4 +16,8 @@ public interface ImageService {
     ImageDto getImageToUser(Principal principal);
 
     ImageDto getImageToPost(Long postId);
+
+    Image getImageById(Long noPhoto);
+
+    Image getImageByUserId(Long id);
 }

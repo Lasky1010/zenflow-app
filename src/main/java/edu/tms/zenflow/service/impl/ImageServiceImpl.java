@@ -46,9 +46,9 @@ public class ImageServiceImpl implements ImageService {
             imageRepository.delete(userProfileImage);
         }
 
-        Image image = mapper.mapTo(byPrincipal.getId(), compressBytes(img.getBytes()), img.getOriginalFilename());
-
-        return mapper.mapTo(imageRepository.save(image));
+        Image image = mapper.mapTo(byPrincipal.getId(), img.getBytes(), img.getOriginalFilename());
+        Image save = imageRepository.save(image);
+        return mapper.mapTo(save);
     }
 
     @Override
@@ -67,9 +67,10 @@ public class ImageServiceImpl implements ImageService {
         User user = findByPrincipal(principal);
 
         Image image = imageRepository.findByUserId(user.getId()).orElse(null);
-        if (!org.springframework.util.ObjectUtils.isEmpty(image)) {
-            image.setImageData(decompressBytes(image.getImageData()));
+        if (!ObjectUtils.isEmpty(image)) {
+            image.setImageData(image.getImageData());
         }
+
 
         return mapper.mapTo(image);
     }
@@ -78,7 +79,7 @@ public class ImageServiceImpl implements ImageService {
     public ImageDto getImageToPost(Long postId) {
         Image image = imageRepository.findByPostId(postId)
                 .orElseThrow(() -> new ImageNotFoundException("Cannot find image to Post: " + postId));
-        if (!org.springframework.util.ObjectUtils.isEmpty(image)) {
+        if (!ObjectUtils.isEmpty(image)) {
             image.setImageData(decompressBytes(image.getImageData()));
         }
 
@@ -108,6 +109,17 @@ public class ImageServiceImpl implements ImageService {
         }
         System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
         return outputStream.toByteArray();
+    }
+
+    @Override
+    public Image getImageById(Long noPhoto) {
+        return imageRepository.findById(noPhoto).orElseThrow(() -> new ImageNotFoundException("Image not found"));
+
+    }
+
+    @Override
+    public Image getImageByUserId(Long id) {
+        return imageRepository.findByUserId(id).orElseThrow(() -> new ImageNotFoundException("Image not found"));
     }
 
     private static byte[] decompressBytes(byte[] data) {

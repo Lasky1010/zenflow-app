@@ -1,6 +1,7 @@
 package edu.tms.zenflow.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer likes;
+    private Integer likes = 0;
 
     private String location;
 
@@ -29,8 +30,8 @@ public class Post {
 
     @ElementCollection(targetClass = String.class)
     private Set<String> whoLikes;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)

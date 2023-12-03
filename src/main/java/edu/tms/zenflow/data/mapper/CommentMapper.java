@@ -7,6 +7,7 @@ import edu.tms.zenflow.data.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
@@ -20,13 +21,13 @@ public interface CommentMapper {
 
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
     default Comment mapTo(CommentDto com, Post post, User user) {
         Comment comment = new Comment();
         comment.setPost(post);
         comment.setMessage(com.getMessage());
-        comment.setId(user.getId());
+        comment.setUserId(user.getId());
         comment.setUsername(user.getUsername());
+        comment.setCreatedAt(OffsetDateTime.now());
         return comment;
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/comment")
+@RequestMapping("/api/comments")
 @CrossOrigin
 public class CommentController {
 
@@ -25,7 +25,7 @@ public class CommentController {
 
 
     @PostMapping("/{postId}")
-    public ResponseEntity<Object> createComment(Long postId,
+    public ResponseEntity<Object> createComment(@PathVariable Long postId,
                                                 @Valid @RequestBody CommentDto commentDto,
                                                 BindingResult bindingResult,
                                                 Principal principal) {
@@ -39,14 +39,14 @@ public class CommentController {
 
 
     @GetMapping("/{postId}")
-    public ResponseEntity<List<CommentDto>> getAllComments(Long postId) {
+    public ResponseEntity<List<CommentDto>> getAllComments(@PathVariable Long postId) {
         List<CommentDto> allComments = commentService.getAllCommentsForPost(postId);
         return ResponseEntity.ok(allComments);
     }
 
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<String> deletePost(Long commentId, Principal principal) {
+    public ResponseEntity<String> deletePost(@PathVariable Long commentId, Principal principal) {
         commentService.deleteComment(commentId, principal);
         return ResponseEntity.ok("Comment was deleted");
     }

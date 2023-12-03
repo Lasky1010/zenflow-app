@@ -13,7 +13,7 @@ public interface ImageMapper {
     default Image mapTo(Long userId, byte[] imgData, String name) {
         Image image = new Image();
         image.setImageData(imgData);
-        image.setId(userId);
+        image.setUserId(userId);
         image.setName(name);
         return image;
     }

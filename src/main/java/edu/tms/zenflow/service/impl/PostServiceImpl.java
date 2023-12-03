@@ -1,6 +1,7 @@
 package edu.tms.zenflow.service.impl;
 
 import edu.tms.zenflow.data.dto.post.PostDto;
+import edu.tms.zenflow.data.dto.request.PostCreateDto;
 import edu.tms.zenflow.data.entity.Post;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.PostNotFoundException;
@@ -8,6 +9,7 @@ import edu.tms.zenflow.data.mapper.PostMapper;
 import edu.tms.zenflow.repository.PostRepository;
 import edu.tms.zenflow.repository.UserRepository;
 import edu.tms.zenflow.service.PostService;
+import edu.tms.zenflow.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository repository;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final PostMapper mapper;
 
     @Override
@@ -33,7 +36,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> getAllPosts() {
-        return mapper.mapTo(repository.findAllByOrderByCreatedAt());
+        List<Post> posts = repository.findAllByOrderByCreatedAt();
+        List<PostDto> postDtos = mapper.mapTo(posts);
+        postDtos
+                .forEach(p ->
+                        p.getUser()
+                                .setImageData(
+                                        userService.getUserById(p.getUser().getId()).getImageData()));
+        return postDtos;
     }
 
     @Override
@@ -44,12 +54,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto createPost(PostDto post, Principal principal) {
+    public PostDto createPost(PostCreateDto post, Principal principal) {
         User byPrincipal = findByPrincipal(principal);
         Post fromDto = mapper.mapTo(post);
         fromDto.setUser(byPrincipal);
         byPrincipal.getPosts().add(fromDto);
-        return mapper.mapTo(fromDto);
+        return mapper.mapTo(repository.save(fromDto));
 
     }
 
@@ -58,9 +68,9 @@ public class PostServiceImpl implements PostService {
     public PostDto likePost(Long postId, String username) {
         Post post = repository.findById(postId).orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND));
 
-        Optional<String> first = post.getWhoLikes().stream().filter((us) -> us.equals(username)).findFirst();
+        Optional<String> likes = post.getWhoLikes().stream().filter(us -> us.equals(username)).findFirst();
 
-        if (first.isPresent()) {
+        if (likes.isPresent()) {
             post.setLikes(post.getLikes() - 1);
             post.getWhoLikes().remove(username);
         } else {

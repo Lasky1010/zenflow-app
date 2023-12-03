@@ -6,9 +6,11 @@ import edu.tms.zenflow.data.dto.request.UserUpdateDto;
 import edu.tms.zenflow.data.dto.user.UserDto;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.*;
+import edu.tms.zenflow.data.mapper.ImageMapper;
 import edu.tms.zenflow.data.mapper.UserMapper;
 import edu.tms.zenflow.repository.UserRepository;
 import edu.tms.zenflow.security.AuthenticationService;
+import edu.tms.zenflow.service.ImageService;
 import edu.tms.zenflow.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +32,12 @@ import static edu.tms.zenflow.data.constants.BadRequestConstants.*;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
+    private static final Long NO_PHOTO = 3L;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
+    private final ImageMapper imageMapper;
+    private final ImageService imageService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -64,6 +69,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         try {
             log.info("Trying save user: " + user.getUsername());
             User save = userRepository.save(userMapper.mapTo(user));
+
             log.info("Successfully saved user: " + user.getUsername());
             return userMapper.mapToSignIn(save);
         } catch (Exception e) {
@@ -109,8 +115,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDto getUserById(Long id) {
-        return userMapper.mapTo(userRepository.findById(id)
+
+        byte[] imageData = imageService.getImageByUserId(id).getImageData();
+        UserDto userDto = userMapper.mapTo(userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND)));
+        userDto.setImageData(imageData);
+        return userDto;
+
+    }
+
+    @Override
+    public UserDto getUserByUsername(String username) {
+        return userMapper.mapTo(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found")));
     }
 
     public User findByPrincipal(Principal principal) {

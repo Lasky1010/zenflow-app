@@ -1,6 +1,7 @@
 package edu.tms.zenflow.controller;
 
 import edu.tms.zenflow.data.dto.post.PostDto;
+import edu.tms.zenflow.data.dto.request.PostCreateDto;
 import edu.tms.zenflow.service.PostService;
 import edu.tms.zenflow.validations.ResponseErrorValidation;
 import jakarta.validation.Valid;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/post")
+@RequestMapping("/api/posts")
 @CrossOrigin
 public class PostController {
 
@@ -25,7 +26,7 @@ public class PostController {
 
 
     @PostMapping
-    public ResponseEntity<Object> createPost(@Valid @RequestBody PostDto postDto, BindingResult bindingResult, Principal principal) {
+    public ResponseEntity<Object> createPost(@Valid @RequestBody PostCreateDto postDto, BindingResult bindingResult, Principal principal) {
         ResponseEntity<Object> errors = responseErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) {
             return errors;
@@ -35,22 +36,22 @@ public class PostController {
     }
 
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<PostDto>> getAllPosts() {
         List<PostDto> allPosts = postService.getAllPosts();
         return ResponseEntity.ok(allPosts);
     }
 
 
-    @GetMapping("/user/posts")
+    @GetMapping("/user")
     public ResponseEntity<List<PostDto>> getAllUsersPosts(Principal principal) {
         List<PostDto> allPosts = postService.getPostsForUser(principal);
         return ResponseEntity.ok(allPosts);
     }
 
 
-    @PostMapping("/{postId}/{username}/like")
-    public ResponseEntity<Object> likePost(Long postId, String username) {
+    @PostMapping("/{postId}/{username}")
+    public ResponseEntity<Object> likePost(@PathVariable Long postId, @PathVariable String username) {
         PostDto likePost = postService.likePost(postId, username);
         return ResponseEntity.ok(likePost);
     }

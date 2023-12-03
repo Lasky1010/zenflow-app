@@ -15,8 +15,8 @@ import java.util.Set;
 
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
 
     private Long id;
@@ -26,6 +26,8 @@ public class UserDto {
     private String username;
 
     private String email;
+
+    private byte[] imageData;
 
     private String password;
 
@@ -52,4 +54,19 @@ public class UserDto {
         this.authorities = authorities;
         this.createdAt = createdAt;
     }
+
+    public UserDto(UserDto userDto) {
+        this.id = userDto.id;
+        this.name = userDto.name;
+        this.username = userDto.username;
+        this.email = userDto.email;
+        this.password = userDto.password;
+        this.posts = userDto.posts;
+        this.permissions.add(Authorities.ROLE_USER);
+        this.authorities = userDto.authorities;
+        this.createdAt = userDto.createdAt;
+        this.imageData = userDto.imageData;
+
+    }
+
 }

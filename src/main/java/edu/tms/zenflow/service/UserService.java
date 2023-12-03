@@ -15,4 +15,6 @@ public interface UserService {
     UserUpdateDto update(UserUpdateDto userUpdate, Principal principal);
 
     UserDto getUserById(Long id);
+
+    UserDto getUserByUsername(String username);
 }

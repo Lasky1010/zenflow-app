@@ -1,6 +1,7 @@
 package edu.tms.zenflow.service;
 
 import edu.tms.zenflow.data.dto.post.PostDto;
+import edu.tms.zenflow.data.dto.request.PostCreateDto;
 
 import java.security.Principal;
 import java.util.List;
@@ -13,7 +14,7 @@ public interface PostService {
 
     PostDto getPostByIdAndUser(Long postId, Principal principal);
 
-    PostDto createPost(PostDto post, Principal principal);
+    PostDto createPost(PostCreateDto post, Principal principal);
 
 
     PostDto likePost(Long postId, String username);

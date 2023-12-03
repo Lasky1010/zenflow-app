@@ -36,8 +36,7 @@ public class JwtTokenVerification {
     public Authentication fromToken(String token) {
         Jws<Claims> claimsJws = Jwts.parser()
                 .setSigningKey(jwtSecretKey)
-                .build()
-                .parseClaimsJws(rawToken(token));
+                .build().parseSignedClaims(rawToken(token));
 
         Claims claims = claimsJws.getPayload();
         var username = (String) claims.get("username");

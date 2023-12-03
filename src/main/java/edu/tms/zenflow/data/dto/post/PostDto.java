@@ -1,5 +1,6 @@
 package edu.tms.zenflow.data.dto.post;
 
+import edu.tms.zenflow.data.dto.user.UserDto;
 import edu.tms.zenflow.data.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class PostDto {
 
     private Set<String> whoLikes;
 
-    private String username;
+    private UserDto user;
 
     private List<Comment> comments;
 
