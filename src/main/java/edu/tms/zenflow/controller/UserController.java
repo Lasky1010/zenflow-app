@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/name/{username}")
     public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
         UserDto user = userService.getUserByUsername(username);
         return ResponseEntity.ok(user);

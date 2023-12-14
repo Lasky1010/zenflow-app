@@ -42,6 +42,10 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Post> posts;
 
+    @ManyToMany
+    private List<User> subscribers;
+
+
     @Getter
     @ElementCollection(targetClass = Authorities.class)
     @Enumerated(EnumType.STRING)

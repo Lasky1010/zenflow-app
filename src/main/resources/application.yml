@@ -9,3 +9,4 @@ spring:
   servlet:
     multipart:
       max-file-size: 4194304
+      file-size-threshold: 4194304

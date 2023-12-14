@@ -1,6 +1,7 @@
 package edu.tms.zenflow.data.dto.user;
 
 import edu.tms.zenflow.data.entity.Post;
+import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.enums.Authorities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,9 @@ public class UserDto {
     private Collection<? extends GrantedAuthority> authorities;
 
     private OffsetDateTime createdAt;
+
+    private List<User> subscribers;
+    private String bio;
 
     public UserDto(Long id, String name, String username,
                    String email, String password,

@@ -19,5 +19,5 @@ public interface ImageService {
 
     Image getImageById(Long noPhoto);
 
-    Image getImageByUserId(Long id);
+    ImageDto getImageByUserId(Long id);
 }
