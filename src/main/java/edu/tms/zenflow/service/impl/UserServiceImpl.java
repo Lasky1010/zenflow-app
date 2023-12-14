@@ -32,7 +32,6 @@ import static edu.tms.zenflow.data.constants.BadRequestConstants.*;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
-    private static final Long NO_PHOTO = 3L;
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
@@ -81,7 +80,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDto getCurrentUser(Principal principal) {
-        return userMapper.mapTo(findByPrincipal(principal));
+        User byPrincipal = findByPrincipal(principal);
+        return userMapper.mapTo(byPrincipal);
     }
 
     @Override
@@ -126,9 +126,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDto getUserByUsername(String username) {
+
         return userMapper.mapTo(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found")));
     }
 
+    @Transactional
     public User findByPrincipal(Principal principal) {
         return userRepository.findByUsername(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException(USERNAME_NOT_FOUND));

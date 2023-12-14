@@ -1,6 +1,7 @@
 package edu.tms.zenflow.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.tms.zenflow.data.enums.Authorities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,9 +43,18 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Post> posts;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "subscriptions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
+    )
+    @JsonIgnore
     private List<User> subscribers;
 
+    @ManyToMany(mappedBy = "subscribers", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<User> onWhoSubscribe;
 
     @Getter
     @ElementCollection(targetClass = Authorities.class)

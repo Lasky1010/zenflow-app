@@ -29,6 +29,7 @@ public class UserController {
     public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
         UserDto currentUser = userService.getCurrentUser(principal);
 
+
         UserDto userDto = new UserDto(currentUser);
         ImageDto imageToUser = imageService.getImageToUser(principal);
         byte[] currentUserImage = null;

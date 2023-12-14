@@ -41,6 +41,10 @@ public class UserDto {
     private OffsetDateTime createdAt;
 
     private List<User> subscribers;
+
+    private List<User> onWhoSubscribe;
+
+
     private String bio;
 
     public UserDto(Long id, String name, String username,
@@ -69,6 +73,9 @@ public class UserDto {
         this.permissions.add(Authorities.ROLE_USER);
         this.authorities = userDto.authorities;
         this.createdAt = userDto.createdAt;
+        this.subscribers = userDto.subscribers;
+        this.onWhoSubscribe = userDto.onWhoSubscribe;
+        this.bio = userDto.bio;
         this.imageData = userDto.imageData;
 
     }
