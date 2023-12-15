@@ -50,9 +50,8 @@ public interface UserMapper {
                 throw new BadRequestUpdateException("Invalid Username");
             }
         }
-        if (dto.getBio() != null && !dto.getBio().isEmpty()) {
-            user.setBio(dto.getBio());
-        }
+
+        user.setBio(dto.getBio());
         if (dto.getEmail() != null && !dto.getEmail().isEmpty()) {
             EmailValidator emailValidator = new EmailValidator();
             if (emailValidator.isValid(dto.getEmail())) {

@@ -64,7 +64,7 @@ public class User implements UserDetails {
     )
     private Set<Authorities> permissions;
 
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "text", length = 600)
     private String bio;
 
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
