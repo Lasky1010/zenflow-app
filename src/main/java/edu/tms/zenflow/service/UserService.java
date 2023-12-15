@@ -17,4 +17,6 @@ public interface UserService {
     UserDto getUserById(Long id);
 
     UserDto getUserByUsername(String username);
+
+    UserDto subscribe(Long id, Principal principal);
 }

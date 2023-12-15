@@ -43,7 +43,7 @@ public class User implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Post> posts;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "subscriptions",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -52,7 +52,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<User> subscribers;
 
-    @ManyToMany(mappedBy = "subscribers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "subscribers", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<User> onWhoSubscribe;
 

@@ -62,4 +62,10 @@ public class UserController {
         var updUser = userService.update(userDto, principal);
         return ResponseEntity.ok(updUser);
     }
+
+    @PostMapping("/subscribe/{id}")
+    public ResponseEntity<UserDto> subscribe(@PathVariable("id") Long userId, Principal principal) {
+        UserDto user = userService.subscribe(userId, principal);
+        return ResponseEntity.ok(user);
+    }
 }

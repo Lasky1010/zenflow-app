@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 
     @Override
-    @Transactional
+
     public UserSignInDto signUp(UserSignInDto user) {
 
         User fromBd = userRepository.findByUsername(user.getUsername()).orElse(null);
@@ -79,13 +79,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+
     public UserDto getCurrentUser(Principal principal) {
         User byPrincipal = findByPrincipal(principal);
         return userMapper.mapTo(byPrincipal);
     }
 
     @Override
-    @Transactional
+
     public UserUpdateDto update(UserUpdateDto userUpdate, Principal principal) {
         User user = findByPrincipal(principal);
         List<String> allUsernames = userRepository.findAll().stream().map(User::getUsername).toList();
@@ -114,8 +115,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    @Transactional
     public UserDto getUserById(Long id) {
-
         byte[] imageData = imageService.getImageByUserId(id).getImageData();
         UserDto userDto = userMapper.mapTo(userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND)));
@@ -125,9 +126,30 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    @Transactional
     public UserDto getUserByUsername(String username) {
-
         return userMapper.mapTo(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found")));
+    }
+
+    @Override
+
+    public UserDto subscribe(Long id, Principal principal) {
+        var user = findByPrincipal(principal);
+        var wantToSubscribe = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        if (!user.getOnWhoSubscribe().contains(wantToSubscribe)) {
+            user.getOnWhoSubscribe().add(wantToSubscribe);
+            wantToSubscribe.getSubscribers().add(user);
+        } else {
+            user.getOnWhoSubscribe().remove(wantToSubscribe);
+            wantToSubscribe.getSubscribers().remove(user);
+        }
+        userRepository.save(user);
+        User save = userRepository.save(wantToSubscribe);
+        UserDto userDto = userMapper.mapTo(save);
+        byte[] imageData = imageService.getImageByUserId(id).getImageData();
+        userDto.setImageData(imageData);
+        return userDto;
     }
 
     @Transactional
