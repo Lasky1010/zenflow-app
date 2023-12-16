@@ -16,7 +16,7 @@ public interface PostService {
 
     PostDto createPost(PostCreateDto post, Principal principal);
 
-
+    List<PostDto> getPostsByUserId(Long userId);
     PostDto likePost(Long postId, String username);
 
     void deletePost(Long postId, Principal principal);

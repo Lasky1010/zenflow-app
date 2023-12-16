@@ -22,7 +22,7 @@ public class JwtTokenProvider {
 
         var now = new Date(System.currentTimeMillis());
         var nowTime = now.getTime();
-        var expTimeMillis = SecurityConstants.REFRESH_TIME;
+        var expTimeMillis = SecurityConstants.EXP_TIME;
         var expDate = new Date(nowTime + expTimeMillis);
         return Jwts.builder()
                 .issuer("AlexanderKovgunov")

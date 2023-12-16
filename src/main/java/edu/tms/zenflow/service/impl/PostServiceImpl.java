@@ -5,6 +5,7 @@ import edu.tms.zenflow.data.dto.request.PostCreateDto;
 import edu.tms.zenflow.data.entity.Post;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.PostNotFoundException;
+import edu.tms.zenflow.data.exception.UserNotFoundException;
 import edu.tms.zenflow.data.mapper.PostMapper;
 import edu.tms.zenflow.repository.PostRepository;
 import edu.tms.zenflow.repository.UserRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static edu.tms.zenflow.data.constants.BadRequestConstants.POST_NOT_FOUND;
+import static edu.tms.zenflow.data.constants.BadRequestConstants.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -92,7 +94,27 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDto> getPostsForUser(Principal principal) {
         User byPrincipal = findByPrincipal(principal);
-        return mapper.mapTo(repository.findAllByUserOrderByCreatedAtDesc(byPrincipal));
+        List<Post> posts = repository.findAllByUserOrderByCreatedAtDesc(byPrincipal);
+        List<PostDto> postDtos = mapper.mapTo(posts);
+        postDtos
+                .forEach(p ->
+                        p.getUser()
+                                .setImageData(
+                                        userService.getUserById(p.getUser().getId()).getImageData()));
+        return postDtos;
+    }
+
+    @Override
+    public List<PostDto> getPostsByUserId(Long userId) {
+        User byPrincipal = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+        List<Post> posts = repository.findAllByUserOrderByCreatedAtDesc(byPrincipal);
+        List<PostDto> postDtos = mapper.mapTo(posts);
+        postDtos
+                .forEach(p ->
+                        p.getUser()
+                                .setImageData(
+                                        userService.getUserById(p.getUser().getId()).getImageData()));
+        return postDtos;
     }
 
     public User findByPrincipal(Principal principal) {
