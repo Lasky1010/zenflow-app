@@ -43,7 +43,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> getAllCommentsForPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND));
-        List<Comment> comment = commentRepository.findAllByPost(post);
+        List<Comment> comment = commentRepository.findAllByPostOrderByCreatedAtDesc(post);
 
         return commentMapper.mapTo(comment);
     }
