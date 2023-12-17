@@ -27,7 +27,7 @@ public class ImageController {
     }
 
     @PostMapping(value = "/{postId}")
-    public ResponseEntity<ImageDto> uploadToPost(@PathVariable Long postId,
+    public ResponseEntity<ImageDto> uploadToPost(@PathVariable("postId") Long postId,
                                                  @RequestParam("file") MultipartFile file,
                                                  Principal principal) throws IOException {
         ImageDto imageDto = imageService.uploadImageToPost(file, postId, principal);
@@ -44,13 +44,13 @@ public class ImageController {
 
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<ImageDto> getImageToUser(@PathVariable Long userId) {
+    public ResponseEntity<ImageDto> getImageToUser(@PathVariable("userId") Long userId) {
         ImageDto imageToUser = imageService.getImageByUserId(userId);
         return ResponseEntity.ok(imageToUser);
     }
 
     @GetMapping("/post/{postId}")
-    public ResponseEntity<ImageDto> getImageToPost(@PathVariable Long postId) {
+    public ResponseEntity<ImageDto> getImageToPost(@PathVariable("postId") Long postId) {
         ImageDto imageToPost = imageService.getImageToPost(postId);
         return ResponseEntity.ok(imageToPost);
     }
