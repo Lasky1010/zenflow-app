@@ -49,12 +49,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(Long commentId, Principal principal) {
+    public CommentDto deleteComment(Long commentId, Principal principal) {
         User byPrincipal = findByPrincipal(principal);
 
         Comment comment = commentRepository.findByIdAndUserId(commentId, byPrincipal.getId()).orElseThrow(() -> new CommentNotFoundException(COMMENT_NOT_FOUND));
 
         commentRepository.delete(comment);
+        return commentMapper.mapTo(comment);
 
     }
 
