@@ -57,13 +57,13 @@ public class PostController {
 
 
     @PostMapping("/{postId}/{username}")
-    public ResponseEntity<Object> likePost(@PathVariable Long postId, @PathVariable String username) {
+    public ResponseEntity<Object> likePost(@PathVariable("postId") Long postId, @PathVariable("username") String username) {
         PostDto likePost = postService.likePost(postId, username);
         return ResponseEntity.ok(likePost);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(Long postId, Principal principal) {
+    public ResponseEntity<String> deletePost(@PathVariable("postId") Long postId, Principal principal) {
         postService.deletePost(postId, principal);
         return ResponseEntity.ok("Post was deleted");
     }
