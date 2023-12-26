@@ -88,6 +88,7 @@ public class PostServiceImpl implements PostService {
         User byPrincipal = findByPrincipal(principal);
         Post post = repository.findByIdAndUser(postId, byPrincipal).orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND));
         repository.delete(post);
+
     }
 
 

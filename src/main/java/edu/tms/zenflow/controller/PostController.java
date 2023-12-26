@@ -2,6 +2,7 @@ package edu.tms.zenflow.controller;
 
 import edu.tms.zenflow.data.dto.post.PostDto;
 import edu.tms.zenflow.data.dto.request.PostCreateDto;
+import edu.tms.zenflow.data.dto.response.MessageResponse;
 import edu.tms.zenflow.service.PostService;
 import edu.tms.zenflow.validations.ResponseErrorValidation;
 import jakarta.validation.Valid;
@@ -57,15 +58,15 @@ public class PostController {
 
 
     @PostMapping("/{postId}/{username}")
-    public ResponseEntity<Object> likePost(@PathVariable("postId") Long postId, @PathVariable("username") String username) {
+    public ResponseEntity<PostDto> likePost(@PathVariable("postId") Long postId, @PathVariable("username") String username) {
         PostDto likePost = postService.likePost(postId, username);
         return ResponseEntity.ok(likePost);
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable("postId") Long postId, Principal principal) {
+    public ResponseEntity<MessageResponse> deletePost(@PathVariable("postId") Long postId, Principal principal) {
         postService.deletePost(postId, principal);
-        return ResponseEntity.ok("Post was deleted");
+        return ResponseEntity.ok(new MessageResponse("Post was deleted"));
     }
 
 
