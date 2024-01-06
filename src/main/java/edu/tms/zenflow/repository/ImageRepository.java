@@ -11,7 +11,8 @@ import java.util.Optional;
 @Transactional
 public interface ImageRepository extends JpaRepository<Image,Long> {
 
-    Optional<Image> findByUserId(Long userId);
+
+    Optional<Image> findImageByUserId(Long userId);
 
     Optional<Image> findByPostId(Long postId);
 

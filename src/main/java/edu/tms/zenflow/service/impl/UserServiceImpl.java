@@ -1,15 +1,14 @@
 package edu.tms.zenflow.service.impl;
 
 import edu.tms.zenflow.data.constants.BadRequestConstants;
+import edu.tms.zenflow.data.dto.ImageDto;
 import edu.tms.zenflow.data.dto.request.UserSignInDto;
 import edu.tms.zenflow.data.dto.request.UserUpdateDto;
 import edu.tms.zenflow.data.dto.user.UserDto;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.*;
-import edu.tms.zenflow.data.mapper.ImageMapper;
 import edu.tms.zenflow.data.mapper.UserMapper;
 import edu.tms.zenflow.repository.UserRepository;
-import edu.tms.zenflow.security.AuthenticationService;
 import edu.tms.zenflow.service.ImageService;
 import edu.tms.zenflow.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +33,6 @@ import static edu.tms.zenflow.data.constants.BadRequestConstants.*;
 public class UserServiceImpl implements UserDetailsService, UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-    private final AuthenticationService authenticationService;
-    private final ImageMapper imageMapper;
     private final ImageService imageService;
 
     @Override
@@ -82,7 +79,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     public UserDto getCurrentUser(Principal principal) {
         User byPrincipal = findByPrincipal(principal);
-        return userMapper.mapTo(byPrincipal);
+        ImageDto imageByUserId = imageService.getImageByUserId(byPrincipal.getId());
+        byte[] imageData = imageByUserId != null ? imageByUserId.getImageData() : null;
+        UserDto userDto = userMapper.mapTo(byPrincipal);
+        userDto.setImageData(imageData);
+        return userDto;
     }
 
     @Override
@@ -110,14 +111,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             throw new BadRequestException(USERNAME_OR_EMAIL_ALREADY_TAKEN);
         }
 
-        // TODO logout
         return userMapper.mapToUpdatedDto(updated);
     }
 
     @Override
     @Transactional
     public UserDto getUserById(Long id) {
-        byte[] imageData = imageService.getImageByUserId(id).getImageData();
+        ImageDto imageByUserId = imageService.getImageByUserId(id);
+        byte[] imageData = imageByUserId != null ? imageByUserId.getImageData() : null;
         UserDto userDto = userMapper.mapTo(userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND)));
         userDto.setImageData(imageData);
@@ -147,7 +148,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userRepository.save(user);
         User save = userRepository.save(wantToSubscribe);
         UserDto userDto = userMapper.mapTo(save);
-        byte[] imageData = imageService.getImageByUserId(id).getImageData();
+        ImageDto imageByUserId = imageService.getImageByUserId(id);
+        byte[] imageData = imageByUserId != null ? imageByUserId.getImageData() : null;
         userDto.setImageData(imageData);
         return userDto;
     }

@@ -30,6 +30,7 @@ public class Post {
 
     @ElementCollection(targetClass = String.class)
     private Set<String> whoLikes;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;

@@ -41,7 +41,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDto uploadImageToUser(MultipartFile img, Principal principal) throws IOException {
         User byPrincipal = findByPrincipal(principal);
-        Image userProfileImage = imageRepository.findByUserId(byPrincipal.getId()).orElse(null);
+        Image userProfileImage = imageRepository.findImageByUserId(byPrincipal.getId()).orElse(null);
 
         if (!ObjectUtils.isEmpty(userProfileImage)) {
             imageRepository.delete(userProfileImage);
@@ -67,7 +67,7 @@ public class ImageServiceImpl implements ImageService {
     public ImageDto getImageToUser(Principal principal) {
         User user = findByPrincipal(principal);
 
-        Image image = imageRepository.findByUserId(user.getId()).orElse(null);
+        Image image = imageRepository.findImageByUserId(user.getId()).orElse(null);
         if (!ObjectUtils.isEmpty(image)) {
             image.setImageData(image.getImageData());
         }
@@ -100,7 +100,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public ImageDto getImageByUserId(Long id) {
-        return mapper.mapTo(imageRepository.findByUserId(id).orElseThrow(() -> new ImageNotFoundException("Image not found")));
+        return mapper.mapTo(imageRepository.findImageByUserId(id).orElse(null));
     }
 
     private byte[] compressBytes(byte[] data) {

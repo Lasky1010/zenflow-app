@@ -14,6 +14,7 @@ import edu.tms.zenflow.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.List;
@@ -83,12 +84,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void deletePost(Long postId, Principal principal) {
-
         User byPrincipal = findByPrincipal(principal);
         Post post = repository.findByIdAndUser(postId, byPrincipal).orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND));
         repository.delete(post);
-
     }
 
 
