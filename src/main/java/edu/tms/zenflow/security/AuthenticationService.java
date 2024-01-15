@@ -1,7 +1,7 @@
 package edu.tms.zenflow.security;
 
 import edu.tms.zenflow.data.constants.SecurityConstants;
-import edu.tms.zenflow.data.dto.request.UserLogInDto;
+import edu.tms.zenflow.data.dto.user.UserLogInDto;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.LogInException;
 import edu.tms.zenflow.repository.UserRepository;

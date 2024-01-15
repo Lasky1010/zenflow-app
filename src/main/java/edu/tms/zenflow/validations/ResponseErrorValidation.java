@@ -12,7 +12,6 @@ import java.util.HashMap;
 public class ResponseErrorValidation {
 
     public ResponseEntity<Object> getErrors(BindingResult result) {
-
         if (result.hasErrors()) {
             HashMap<String, String> errors = new HashMap<>();
             for (ObjectError err : result.getAllErrors()) {

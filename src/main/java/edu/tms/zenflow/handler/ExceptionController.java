@@ -18,7 +18,6 @@ public class ExceptionController {
         return buildResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-
     private ResponseEntity<ApiResponse> buildResponseEntity(String message, HttpStatus httpStatus) {
         ApiResponse apiResponse = ApiResponse.createApiResponse(message, httpStatus.value());
         return ResponseEntity.status(httpStatus).body(apiResponse);

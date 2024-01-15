@@ -1,12 +1,13 @@
 package edu.tms.zenflow.service.impl;
 
+import edu.tms.zenflow.data.dto.post.PostCreateDto;
 import edu.tms.zenflow.data.dto.post.PostDto;
-import edu.tms.zenflow.data.dto.request.PostCreateDto;
 import edu.tms.zenflow.data.entity.Post;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.PostNotFoundException;
 import edu.tms.zenflow.data.exception.UserNotFoundException;
 import edu.tms.zenflow.data.mapper.PostMapper;
+import edu.tms.zenflow.repository.ImageRepository;
 import edu.tms.zenflow.repository.PostRepository;
 import edu.tms.zenflow.repository.UserRepository;
 import edu.tms.zenflow.service.PostService;
@@ -31,15 +32,12 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final PostMapper mapper;
+    private final ImageRepository imageRepository;
 
-    @Override
-    public List<PostDto> findByUsername(String username) {
-        return null;
-    }
 
     @Override
     public List<PostDto> getAllPosts() {
-        List<Post> posts = repository.findAllByOrderByCreatedAt();
+        List<Post> posts = repository.findAllByOrderByCreatedAtDesc();
         List<PostDto> postDtos = mapper.mapTo(posts);
         postDtos
                 .forEach(p ->
@@ -49,12 +47,6 @@ public class PostServiceImpl implements PostService {
         return postDtos;
     }
 
-    @Override
-    public PostDto getPostByIdAndUser(Long postId, Principal principal) {
-        User byPrincipal = findByPrincipal(principal);
-        return mapper.mapTo(repository.findByIdAndUser(postId, byPrincipal).
-                orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND)));
-    }
 
     @Override
     public PostDto createPost(PostCreateDto post, Principal principal) {
@@ -88,7 +80,9 @@ public class PostServiceImpl implements PostService {
     public void deletePost(Long postId, Principal principal) {
         User byPrincipal = findByPrincipal(principal);
         Post post = repository.findByIdAndUser(postId, byPrincipal).orElseThrow(() -> new PostNotFoundException(POST_NOT_FOUND));
-        repository.delete(post);
+        imageRepository.findByPostId(postId).ifPresent(imageRepository::delete);
+        repository.deleteLikesFromPost(postId.intValue());
+        repository.deleteById(postId.intValue());
     }
 
 

@@ -1,4 +1,4 @@
-package edu.tms.zenflow.data.dto.request;
+package edu.tms.zenflow.data.dto.user;
 
 import edu.tms.zenflow.annotation.ValidEmail;
 import edu.tms.zenflow.annotation.ValidPass;
@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserSignInDto {
+public class UserSignUpDto {
 
     @ValidUsername
     @NotEmpty(message = "Username is required")

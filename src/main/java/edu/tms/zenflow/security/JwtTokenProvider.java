@@ -39,21 +39,4 @@ public class JwtTokenProvider {
                 .signWith(secretKey)
                 .compact();
     }
-
-    public String generateRefreshToken(String subject) {
-        Date nowDate = new Date();
-        long expirationTimeMillis = SecurityConstants.REFRESH_TIME;
-        long expDateMillis = System.currentTimeMillis() + expirationTimeMillis;
-        Date expDate = new Date(expDateMillis);
-        return Jwts.builder()
-                .issuedAt(nowDate)
-                .notBefore(nowDate)
-                .expiration(expDate)
-                .signWith(secretKey)
-                .subject(subject)
-                .claim(IS_REFRESHED_TOKEN, true)
-                .compact();
-    }
-
-
 }

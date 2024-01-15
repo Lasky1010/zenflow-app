@@ -1,6 +1,6 @@
 package edu.tms.zenflow.service.impl;
 
-import edu.tms.zenflow.data.dto.ImageDto;
+import edu.tms.zenflow.data.dto.image.ImageDto;
 import edu.tms.zenflow.data.entity.Image;
 import edu.tms.zenflow.data.entity.Post;
 import edu.tms.zenflow.data.entity.User;
@@ -8,7 +8,6 @@ import edu.tms.zenflow.data.exception.ImageNotFoundException;
 import edu.tms.zenflow.data.exception.PostNotFoundException;
 import edu.tms.zenflow.data.mapper.ImageMapper;
 import edu.tms.zenflow.repository.ImageRepository;
-import edu.tms.zenflow.repository.PostRepository;
 import edu.tms.zenflow.repository.UserRepository;
 import edu.tms.zenflow.service.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,6 @@ import static edu.tms.zenflow.data.constants.BadRequestConstants.POST_NOT_FOUND;
 @Slf4j
 public class ImageServiceImpl implements ImageService {
 
-    private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
     private final ImageMapper mapper;
@@ -92,11 +90,7 @@ public class ImageServiceImpl implements ImageService {
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found exception"));
     }
 
-    @Override
-    public Image getImageById(Long noPhoto) {
-        return imageRepository.findById(noPhoto).orElseThrow(() -> new ImageNotFoundException("Image not found"));
 
-    }
 
     @Override
     public ImageDto getImageByUserId(Long id) {

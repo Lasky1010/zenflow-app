@@ -1,10 +1,10 @@
 package edu.tms.zenflow.service.impl;
 
 import edu.tms.zenflow.data.constants.BadRequestConstants;
-import edu.tms.zenflow.data.dto.ImageDto;
-import edu.tms.zenflow.data.dto.request.UserSignInDto;
-import edu.tms.zenflow.data.dto.request.UserUpdateDto;
+import edu.tms.zenflow.data.dto.image.ImageDto;
 import edu.tms.zenflow.data.dto.user.UserDto;
+import edu.tms.zenflow.data.dto.user.UserSignUpDto;
+import edu.tms.zenflow.data.dto.user.UserUpdateDto;
 import edu.tms.zenflow.data.entity.User;
 import edu.tms.zenflow.data.exception.*;
 import edu.tms.zenflow.data.mapper.UserMapper;
@@ -13,10 +13,6 @@ import edu.tms.zenflow.service.ImageService;
 import edu.tms.zenflow.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,26 +26,13 @@ import static edu.tms.zenflow.data.constants.BadRequestConstants.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final ImageService imageService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("Username {%s} not found", username)));
-
-        List<? extends GrantedAuthority> authorities = user.getPermissions().stream()
-                .map(a -> new SimpleGrantedAuthority(a.name())).toList();
-
-        user.setAuthorities(authorities);
-        return user;
-    }
-
-
-    @Override
-
-    public UserSignInDto signUp(UserSignInDto user) {
+    public UserSignUpDto signUp(UserSignUpDto user) {
 
         User fromBd = userRepository.findByUsername(user.getUsername()).orElse(null);
         if (fromBd != null) {
@@ -76,7 +59,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-
     public UserDto getCurrentUser(Principal principal) {
         User byPrincipal = findByPrincipal(principal);
         ImageDto imageByUserId = imageService.getImageByUserId(byPrincipal.getId());
@@ -87,7 +69,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-
     public UserUpdateDto update(UserUpdateDto userUpdate, Principal principal) {
         User user = findByPrincipal(principal);
         List<String> allUsernames = userRepository.findAll().stream().map(User::getUsername).toList();
@@ -115,7 +96,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    @Transactional
     public UserDto getUserById(Long id) {
         ImageDto imageByUserId = imageService.getImageByUserId(id);
         byte[] imageData = imageByUserId != null ? imageByUserId.getImageData() : null;
@@ -127,13 +107,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    @Transactional
     public UserDto getUserByUsername(String username) {
         return userMapper.mapTo(userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found")));
     }
 
     @Override
-
     public UserDto subscribe(Long id, Principal principal) {
         var user = findByPrincipal(principal);
         var wantToSubscribe = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));

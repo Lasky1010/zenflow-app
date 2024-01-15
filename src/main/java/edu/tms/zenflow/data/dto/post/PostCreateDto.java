@@ -1,4 +1,4 @@
-package edu.tms.zenflow.data.dto.request;
+package edu.tms.zenflow.data.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

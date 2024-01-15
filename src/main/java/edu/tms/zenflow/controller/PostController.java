@@ -1,7 +1,7 @@
 package edu.tms.zenflow.controller;
 
+import edu.tms.zenflow.data.dto.post.PostCreateDto;
 import edu.tms.zenflow.data.dto.post.PostDto;
-import edu.tms.zenflow.data.dto.request.PostCreateDto;
 import edu.tms.zenflow.data.dto.response.MessageResponse;
 import edu.tms.zenflow.service.PostService;
 import edu.tms.zenflow.validations.ResponseErrorValidation;

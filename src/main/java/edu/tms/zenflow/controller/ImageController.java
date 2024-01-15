@@ -1,6 +1,6 @@
 package edu.tms.zenflow.controller;
 
-import edu.tms.zenflow.data.dto.ImageDto;
+import edu.tms.zenflow.data.dto.image.ImageDto;
 import edu.tms.zenflow.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

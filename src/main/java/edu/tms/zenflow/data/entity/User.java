@@ -41,7 +41,6 @@ public class User implements UserDetails {
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
-    @Column(name = "id")
     private List<Post> posts;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

@@ -1,9 +1,9 @@
 package edu.tms.zenflow.controller;
 
 
-import edu.tms.zenflow.data.dto.request.UserLogInDto;
-import edu.tms.zenflow.data.dto.request.UserSignInDto;
 import edu.tms.zenflow.data.dto.response.TokenResponse;
+import edu.tms.zenflow.data.dto.user.UserLogInDto;
+import edu.tms.zenflow.data.dto.user.UserSignUpDto;
 import edu.tms.zenflow.security.AuthenticationService;
 import edu.tms.zenflow.service.UserService;
 import edu.tms.zenflow.validations.ResponseErrorValidation;
@@ -27,7 +27,7 @@ public class AuthController {
 
     @CrossOrigin
     @PostMapping("/sign-up")
-    public ResponseEntity<Object> signUp(@Valid @RequestBody UserSignInDto user, BindingResult bindingResult) {
+    public ResponseEntity<Object> signUp(@Valid @RequestBody UserSignUpDto user, BindingResult bindingResult) {
 
         ResponseEntity<Object> errors = responseErrorValidation.getErrors(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) {

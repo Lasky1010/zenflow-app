@@ -24,7 +24,6 @@ public class Post {
 
     private Integer likes = 0;
 
-    private String location;
 
     private String description;
 
@@ -34,7 +33,6 @@ public class Post {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
-
 
     @OneToMany(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER,mappedBy = "post",orphanRemoval=true)
     private List<Comment> comments;

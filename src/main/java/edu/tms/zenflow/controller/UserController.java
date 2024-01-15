@@ -1,8 +1,8 @@
 package edu.tms.zenflow.controller;
 
-import edu.tms.zenflow.data.dto.ImageDto;
-import edu.tms.zenflow.data.dto.request.UserUpdateDto;
+import edu.tms.zenflow.data.dto.image.ImageDto;
 import edu.tms.zenflow.data.dto.user.UserDto;
+import edu.tms.zenflow.data.dto.user.UserUpdateDto;
 import edu.tms.zenflow.service.ImageService;
 import edu.tms.zenflow.service.UserService;
 import edu.tms.zenflow.validations.ResponseErrorValidation;
@@ -28,7 +28,6 @@ public class UserController {
     @GetMapping
     public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
         UserDto currentUser = userService.getCurrentUser(principal);
-
 
         UserDto userDto = new UserDto(currentUser);
         ImageDto imageToUser = imageService.getImageToUser(principal);

@@ -1,4 +1,4 @@
-package edu.tms.zenflow.data.dto;
+package edu.tms.zenflow.data.dto.image;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
